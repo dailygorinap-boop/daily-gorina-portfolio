@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Gorina</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--black:#080808;--white:#F2EFE9;--coral:#E8572A;--sand:#C9B99A;--charcoal:#141414;--mid:#2A2A2A;--gray:#666;--border:rgba(242,239,233,0.07)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden}
+.cursor{width:8px;height:8px;background:var(--coral);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s}
+.cursor-ring{width:32px;height:32px;border:1px solid rgba(232,87,42,.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .35s ease}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:24px 6%;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(8,8,8,.95) 0%,transparent 100%)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:var(--white);text-decoration:none}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{color:var(--white);text-decoration:none;font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.4;transition:opacity .3s}
+.nav-links a:hover{opacity:1;color:var(--coral)}
+.hero{min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:120px 6% 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 20%,rgba(232,87,42,.06) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(201,185,154,.04) 0%,transparent 60%);pointer-events:none}
+.hero-watermark{position:absolute;bottom:-4vh;left:-2%;font-family:'Bebas Neue',sans-serif;font-size:clamp(160px,22vw,300px);color:rgba(242,239,233,.025);line-height:1;pointer-events:none;user-select:none;white-space:nowrap;letter-spacing:-4px}
+.hero-eyebrow{display:flex;align-items:center;gap:16px;margin-bottom:20px;opacity:0;transform:translateY(16px);animation:up .7s ease forwards .3s}
+.hero-eyebrow-line{width:40px;height:1px;background:var(--coral)}
+.hero-eyebrow-text{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--coral);font-weight:500}
+.hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,13vw,180px);line-height:.88;letter-spacing:1px;opacity:0;transform:translateY(24px);animation:up .9s ease forwards .5s}
+.hero-name-italic{font-family:'Libre Baskerville',serif;font-style:italic;color:var(--coral);font-size:.55em;display:block;letter-spacing:3px;margin-left:8px;margin-top:-8px}
+.hero-footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;padding-top:32px;border-top:1px solid var(--border);opacity:0;transform:translateY(16px);animation:up .7s ease forwards .9s}
+.hero-desc{max-width:380px;font-size:14px;line-height:1.9;color:rgba(242,239,233,.45);font-weight:300}
+.hero-cta{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.btn-primary{display:inline-flex;align-items:center;gap:12px;padding:16px 32px;background:var(--coral);color:var(--white);font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:600;text-decoration:none;transition:all .3s ease;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.btn-primary:hover{background:var(--white);color:var(--black);transform:translateY(-2px)}
+.hero-scroll-hint{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(242,239,233,.2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stat{padding:48px 6%;border-right:1px solid var(--border);transition:background .4s;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--coral);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.stat:hover{background:var(--charcoal)}
+.stat:hover::after{transform:scaleX(1)}
+.stat:last-child{border-right:none}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,5vw,80px);color:var(--coral);line-height:1;letter-spacing:2px}
+.stat-l{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-top:10px}
+.section{padding:120px 6%}
+.s-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--coral);margin-bottom:12px}
+.s-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,6vw,80px);line-height:.9;letter-spacing:1px;margin-bottom:60px}
+.s-divider{width:100%;height:1px;background:var(--border);margin-bottom:60px}
+.clients{background:var(--charcoal)}
+.client-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border)}
+.client-card{padding:36px 28px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:all .35s ease;position:relative;overflow:hidden}
+.client-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--coral);transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
+.client-card:hover{background:rgba(232,87,42,.05)}
+.client-card:hover::before{transform:scaleX(1)}
+.client-card:nth-child(4n){border-right:none}
+.client-cn{font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px}
+.client-ci{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)}
+.cases{background:var(--black)}
+.case{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;padding:80px 0;border-bottom:1px solid var(--border)}
+.case:first-of-type{padding-top:0}
+.case:last-of-type{border-bottom:none}
+.case.reverse{direction:rtl}
+.case.reverse > *{direction:ltr}
+.case-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--coral);margin-bottom:14px}
+.case-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4vw,56px);line-height:.9;letter-spacing:1px;margin-bottom:6px}
+.case-role{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:40px}
+.case-block{margin-bottom:28px}
+.case-block-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--sand);margin-bottom:10px}
+.case-block-text{font-size:14px;line-height:1.85;color:rgba(242,239,233,.5);font-weight:300}
+.results{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:8px}
+.result-box{background:var(--charcoal);padding:24px 20px;text-align:center;border:1px solid var(--border);transition:border-color .3s}
+.result-box:hover{border-color:var(--coral)}
+.result-n{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--coral);letter-spacing:2px;line-height:1}
+.result-l{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-top:6px;line-height:1.4}
+.case-visual{background:var(--charcoal);min-height:480px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative;overflow:hidden;transition:border-color .4s}
+.case-visual:hover{border-color:rgba(232,87,42,.3)}
+.case-visual-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(242,239,233,.2);text-align:center;padding:0 24px;line-height:1.8}
+.case-visual-icon{font-size:48px;opacity:.2}
+.case-corner{position:absolute;width:32px;height:32px;opacity:.4}
+.case-corner.tr{top:20px;right:20px;border-top:1px solid var(--coral);border-right:1px solid var(--coral)}
+.case-corner.bl{bottom:20px;left:20px;border-bottom:1px solid var(--coral);border-left:1px solid var(--coral)}
+.ai-section{background:var(--charcoal);position:relative;overflow:hidden}
+.ai-section::before{content:'AI';position:absolute;right:-2%;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(200px,28vw,400px);color:rgba(232,87,42,.04);pointer-events:none;user-select:none;line-height:1}
+.ai-intro{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-bottom:80px}
+.ai-intro-text{font-size:15px;line-height:1.9;color:rgba(242,239,233,.5);font-weight:300}
+.ai-intro-pull{font-family:'Libre Baskerville',serif;font-style:italic;font-size:clamp(18px,2vw,24px);color:var(--sand);line-height:1.6;padding-left:32px;border-left:2px solid var(--coral)}
+.ai-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.ai-card{background:rgba(8,8,8,.6);padding:48px 36px;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .4s ease}
+.ai-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--coral) 0%,transparent 100%);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.ai-card:hover{background:rgba(232,87,42,.04);transform:translateY(-4px)}
+.ai-card:hover::after{transform:scaleX(1)}
+.ai-card-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:rgba(232,87,42,.15);line-height:1;margin-bottom:24px}
+.ai-card-title{font-family:'Libre Baskerville',serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:16px}
+.ai-card-text{font-size:13px;line-height:1.9;color:rgba(242,239,233,.4)}
+.ai-tag{display:inline-block;margin-top:24px;padding:6px 14px;border:1px solid rgba(232,87,42,.3);color:var(--coral);font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.process{background:var(--black)}
+.process-intro{max-width:600px;font-size:14px;line-height:1.9;color:rgba(242,239,233,.4);margin-bottom:80px}
+.process-grid{display:grid;grid-template-columns:repeat(5,1fr);position:relative}
+.process-grid::before{content:'';position:absolute;top:28px;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,var(--coral),transparent);opacity:.2}
+.process-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.step-dot{width:56px;height:56px;border-radius:50%;background:var(--charcoal);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--coral);margin-bottom:24px;position:relative;z-index:1;transition:all .3s}
+.process-step:hover .step-dot{background:var(--coral);color:var(--white);box-shadow:0 0 32px rgba(232,87,42,.3)}
+.step-title{font-weight:600;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:12px}
+.step-text{font-size:12px;line-height:1.7;color:var(--gray)}
+.quote-section{background:var(--coral);padding:100px 6%;text-align:center}
+.quote-text{font-family:'Libre Baskerville',serif;font-style:italic;font-size:clamp(22px,3vw,36px);color:var(--white);max-width:800px;margin:0 auto;line-height:1.6}
+.quote-author{margin-top:32px;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(242,239,233,.6)}
+.contact-section{background:var(--black);padding:140px 6%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-top:1px solid var(--border)}
+.contact-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,8vw,120px);line-height:.88;letter-spacing:1px;color:var(--white)}
+.contact-title span{color:var(--coral)}
+.contact-right{display:flex;flex-direction:column;gap:24px}
+.contact-desc{font-size:15px;line-height:1.9;color:rgba(242,239,233,.4);font-weight:300}
+.contact-links{display:flex;flex-direction:column;gap:12px}
+.contact-link{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border:1px solid var(--border);text-decoration:none;color:var(--white);font-size:11px;letter-spacing:3px;text-transform:uppercase;transition:all .3s}
+.contact-link:hover{border-color:var(--coral);background:rgba(232,87,42,.05);padding-left:32px}
+.contact-link .arrow{color:var(--coral);font-size:18px}
+.contact-link.featured{background:var(--coral);border-color:var(--coral);font-weight:600}
+.contact-link.featured:hover{background:var(--white);color:var(--black);border-color:var(--white)}
+footer{padding:32px 6%;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)}
+.footer-name{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:4px;color:var(--white)}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+@keyframes up{to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .client-grid{grid-template-columns:repeat(2,1fr)}
+  .client-card:nth-child(4n){border-right:1px solid var(--border)}
+  .client-card:nth-child(2n){border-right:none}
+  .case{grid-template-columns:1fr;gap:40px}
+  .case.reverse{direction:ltr}
+  .ai-intro{grid-template-columns:1fr;gap:40px}
+  .ai-cards{grid-template-columns:1fr}
+  .process-grid{grid-template-columns:1fr;gap:40px}
+  .process-grid::before{display:none}
+  .contact-section{grid-template-columns:1fr;gap:48px}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a class="nav-logo" href="#">DG</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#ai">AI Tools</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://portfolioclinics.my.canva.site/dailygportfolio" target="_blank" style="color:var(--coral);border:1px solid rgba(232,87,42,0.4);padding:8px 16px;">View Work ↗</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-watermark">DAILY</div>
+  <div class="hero-eyebrow">
+    <div class="hero-eyebrow-line"></div>
+    <span class="hero-eyebrow-text">Head of Content · Creative Strategist · AI Workflow Specialist</span>
+  </div>
+  <h1 class="hero-name">
+    Daily<br>
+    <span class="hero-name-italic">Gorina</span>
+  </h1>
+  <div class="hero-footer">
+    <p class="hero-desc">I build content systems, lead creative teams, and produce high-performing video that grows audiences and drives measurable business results.</p>
+    <div class="hero-cta">
+      <a href="#work" class="btn-primary">View Work ↓</a>
+      <span class="hero-scroll-hint">Scroll to explore</span>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat reveal"><div class="stat-n">7+</div><div class="stat-l">Years of Experience</div></div>
+  <div class="stat reveal reveal-delay-1"><div class="stat-n">10M+</div><div class="stat-l">Views Generated</div></div>
+  <div class="stat reveal reveal-delay-2"><div class="stat-n">12+</div><div class="stat-l">Brands Led</div></div>
+  <div class="stat reveal reveal-delay-3"><div class="stat-n">200+</div><div class="stat-l">Content Produced &amp; Led</div></div>
+</div>
+
+<!-- BIO -->
+<section class="section" style="background:var(--black);padding:80px 6%;border-bottom:1px solid var(--border);">
+  <div style="max-width:800px;" class="reveal">
+    <div class="s-label" style="margin-bottom:16px;">About</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,52px);line-height:0.9;letter-spacing:1px;color:var(--white);margin-bottom:40px;">The Person<br><span style="color:var(--coral);">Behind the Work</span></div>
+    <p style="font-size:17px;line-height:2;color:rgba(242,239,233,0.55);font-weight:300;margin-bottom:28px;">I'm a Miami-based content strategist and producer with 7+ years of experience doing it all: shooting, scripting, editing, producing, strategizing, and leading teams. That full-stack experience isn't just a resume line. It's what makes me a better leader. When you've done every job on a content team, you know exactly how to direct, support, and elevate the people doing them.</p>
+    <p style="font-size:17px;line-height:2;color:rgba(242,239,233,0.55);font-weight:300;">I'm obsessed with optimization — always looking for what's working, what's not, and how to make the whole operation run smarter. I stay current with the latest platform shifts, AI tools, and content formats because in this industry, standing still is falling behind. That curiosity is what keeps the work, and the teams I lead, performing at a consistently high level.</p>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section class="section clients" id="clients">
+  <div class="s-label reveal">Brands I've Led Content For</div>
+  <div class="s-title reveal">Client Roster</div>
+  <div class="s-divider"></div>
+  <div class="client-grid">
+    <div class="client-card reveal"><div class="client-cn">Princess Cruises</div><div class="client-ci">Hospitality & Travel</div></div>
+    <div class="client-card reveal reveal-delay-1"><div class="client-cn">Mia Aesthetics</div><div class="client-ci">Medical Aesthetics</div></div>
+    <div class="client-card reveal reveal-delay-2"><div class="client-cn">SELF The Agency</div><div class="client-ci">Social Media Agency</div></div>
+    <div class="client-card reveal reveal-delay-3"><div class="client-cn">Skin Solutions</div><div class="client-ci">Beauty & Wellness</div></div>
+    <div class="client-card reveal"><div class="client-cn">Saint Venust</div><div class="client-ci">Fashion & Lifestyle</div></div>
+    <div class="client-card reveal reveal-delay-1"><div class="client-cn">Achille Apparel</div><div class="client-ci">Fashion & Streetwear</div></div>
+    <div class="client-card reveal reveal-delay-2"><div class="client-cn">DNAge Medical</div><div class="client-ci">Medical & Wellness</div></div>
+    <div class="client-card reveal reveal-delay-3"><div class="client-cn">Eisenberg & Baum</div><div class="client-ci">Legal</div></div>
+    <div class="client-card reveal"><div class="client-cn">PineBridge Investments</div><div class="client-ci">Finance & Corporate</div></div>
+    <div class="client-card reveal reveal-delay-1"><div class="client-cn">Corina Curatola</div><div class="client-ci">Personal Brand</div></div>
+    <div class="client-card reveal reveal-delay-2"><div class="client-cn">Willis Marine</div><div class="client-ci">Marine & Luxury</div></div>
+    <div class="client-card reveal reveal-delay-3"><div class="client-cn">Kove Salon</div><div class="client-ci">Beauty & Lifestyle</div></div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="section cases" id="work">
+  <div class="s-label reveal">Selected Work</div>
+  <div class="s-title reveal">Case Studies</div>
+  <div class="s-divider"></div>
+  <div class="reveal" style="margin-bottom:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <p style="font-size:14px;color:rgba(242,239,233,0.4);max-width:480px;line-height:1.7;">Strategy, results, and creative direction across three key engagements. Want to see the actual videos and campaign work?</p>
+    <a href="https://portfolioclinics.my.canva.site/dailygportfolio" target="_blank" style="display:inline-flex;align-items:center;gap:10px;padding:16px 32px;border:1px solid rgba(232,87,42,0.5);color:var(--coral);text-decoration:none;font-size:10px;letter-spacing:3px;text-transform:uppercase;white-space:nowrap;transition:all 0.3s;">View Production Work ↗</a>
+  </div>
+
+  <div class="case reveal">
+    <div>
+      <div class="case-eyebrow">Case Study 01</div>
+      <div class="case-title">Princess<br>Cruises</div>
+      <div class="case-role">Produced · Directed · Shot · Edited</div>
+      <div class="case-block"><div class="case-block-label">The Challenge</div><div class="case-block-text">Drive organic reach and audience growth across Instagram, Facebook, TikTok, LinkedIn, X and Threads for a global cruise brand. Producing cinematic content on location across the Caribbean and Mediterranean with a consistent publishing cadence.</div></div>
+      <div class="case-block"><div class="case-block-label">The Approach</div><div class="case-block-text">Built a platform-native short-form video strategy around destination storytelling, lifestyle moments, and food & beverage content. Directed and edited vertically-optimized videos using high-retention hooks, cinematic visuals, and text overlays tuned for social performance.</div></div>
+      <div class="case-block"><div class="case-block-label">The Results</div>
+        <div class="results">
+          <div class="result-box"><div class="result-n">4.5M</div><div class="result-l">Top Video Views</div></div>
+          <div class="result-box"><div class="result-n">↑20%</div><div class="result-l">Faster Turnaround</div></div>
+          <div class="result-box"><div class="result-n">30+</div><div class="result-l">Campaigns</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);padding:40px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:60px;height:60px;border-top:2px solid #E8572A;border-left:2px solid #E8572A;"></div>
+        <div style="position:absolute;bottom:0;right:0;width:60px;height:60px;border-bottom:2px solid #E8572A;border-right:2px solid #E8572A;"></div>
+        <div style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:120px;color:rgba(232,87,42,0.03);line-height:1;pointer-events:none;user-select:none;">PCL</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <div>
+            <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#E8572A;margin-bottom:8px;">Campaign Results</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#F2EFE9;line-height:0.9;letter-spacing:1px;">Princess<br><span style="color:#E8572A;">Cruises</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#555;margin-bottom:6px;">Aug 2025 — Present</div>
+            <div style="font-size:12px;color:#888;font-weight:300;line-height:1.5;">Social Media Content Producer<br>Produced · Directed · Shot · Edited</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:2px;">
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">4.5M</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Views — Top Video</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Single video reached 4.5M views — with multiple others hitting 1M–2M+, totaling 5M+ views</div>
+          </div>
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">30+</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Campaigns Produced</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Concept through final delivery across global cruise destinations worldwide</div>
+          </div>
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">5M+</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Total Views</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Multiple videos hitting 1M–2M+ views, with one video alone reaching 4.5M</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-bottom:20px;">
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">↑20%</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Faster Turnaround</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Reduced production time via repeatable workflows &amp; scalable content frameworks</div>
+          </div>
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">Caribbean<br>&amp; Med</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">On-Location Production</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Filmed on location across Caribbean &amp; Mediterranean destinations. Helped produce content for Star Princess, Princess Cruises'&#39; newest ship launch</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:20px;padding:16px 20px;background:rgba(232,87,42,0.06);border:1px solid rgba(232,87,42,0.15);flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#E8572A;"></div><span style="font-size:11px;color:rgba(242,239,233,0.5);"><strong style="color:#F2EFE9;">Platforms:</strong> Instagram · Facebook · TikTok · LinkedIn · X · Threads</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#E8572A;"></div><span style="font-size:11px;color:rgba(242,239,233,0.5);"><strong style="color:#F2EFE9;">Strategy:</strong> Organic Reels boosted to paid when high-performing</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#E8572A;"></div><span style="font-size:11px;color:rgba(242,239,233,0.5);"><strong style="color:#F2EFE9;">Style:</strong> Cinematic · Destination · Lifestyle</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="case reverse reveal">
+    <div>
+      <div class="case-eyebrow">Case Study 02</div>
+      <div class="case-title">Mia<br>Aesthetics</div>
+      <div class="case-role">Produced · Directed · Shot · Edited · Strategy</div>
+      <div class="case-block"><div class="case-block-label">The Challenge</div><div class="case-block-text">Support the nationwide launch of 10+ plastic surgery centers with video content that built brand trust, educated audiences, and drove patient acquisition. All while maintaining strict brand compliance standards across a regulated industry.</div></div>
+      <div class="case-block"><div class="case-block-label">The Approach</div><div class="case-block-text">Led multi-state production campaigns producing physician Q&As, patient transformation stories, and ad assets. Promoted from Social Media to the Marketing Department to lead campaign concepting at a broader brand level.</div></div>
+      <div class="case-block"><div class="case-block-label">The Results</div>
+        <div class="results">
+          <div class="result-box"><div class="result-n">35%</div><div class="result-l">Engagement Increase</div></div>
+          <div class="result-box"><div class="result-n">25%</div><div class="result-l">Monthly View Growth</div></div>
+          <div class="result-box"><div class="result-n">60+</div><div class="result-l">Videos Produced</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);padding:40px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:60px;height:60px;border-top:2px solid #E8572A;border-left:2px solid #E8572A;"></div>
+        <div style="position:absolute;bottom:0;right:0;width:60px;height:60px;border-bottom:2px solid #E8572A;border-right:2px solid #E8572A;"></div>
+        <div style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:180px;color:rgba(232,87,42,0.03);line-height:1;pointer-events:none;user-select:none;">MIA</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <div>
+            <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#E8572A;margin-bottom:8px;">Campaign Results</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#F2EFE9;line-height:0.9;letter-spacing:1px;">Mia<br><span style="color:#E8572A;">Aesthetics</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#555;margin-bottom:6px;">2020 — 2023</div>
+            <div style="font-size:12px;color:#888;font-weight:300;line-height:1.5;">Video Producer<br>Promoted: Social → Marketing</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:2px;">
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">35%</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Engagement Increase</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Grew engagement via physician Q&As, patient stories &amp; ad campaigns</div>
+          </div>
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">25%</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Monthly View Growth</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Increased avg monthly views by optimizing content calendar with trend data</div>
+          </div>
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">20%</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Production Time Saved</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Reduced turnaround via repeatable workflows &amp; scripting systems</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-bottom:24px;">
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">60+</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Videos Produced</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Physician intros, transformations, Q&As &amp; ad assets, scripted, directed, shot &amp; edited</div>
+          </div>
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#E8572A;line-height:1;letter-spacing:2px;">10+</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Clinic Launches</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Multi-state production campaigns from creative strategy through final delivery</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:20px;padding:16px 20px;background:rgba(232,87,42,0.06);border:1px solid rgba(232,87,42,0.15);flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#E8572A;"></div><span style="font-size:11px;color:rgba(242,239,233,0.5);"><strong style="color:#F2EFE9;">Platforms:</strong> Instagram · YouTube · Paid Ads</span></div>
+
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#E8572A;"></div><span style="font-size:11px;color:rgba(242,239,233,0.5);"><strong style="color:#F2EFE9;">Scope:</strong> 10+ Clinic Launches · Multi-State</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case reveal">
+    <div>
+      <div class="case-eyebrow">Case Study 03</div>
+      <div class="case-title">SELF<br>The Agency</div>
+      <div class="case-role">Head of Content · Strategy · Production</div>
+      <div class="case-block"><div class="case-block-label">The Challenge</div><div class="case-block-text">Serve as Head of Content for a full-service social media agency, owning content strategy, creative direction, and production across a diverse client roster spanning beauty, wellness, fashion, legal, and personal brand sectors simultaneously.</div></div>
+      <div class="case-block"><div class="case-block-label">The Approach</div><div class="case-block-text">Built editorial calendars, content pillars, and campaign frameworks per client. Directed campaign shoots, developed course content, managed editors and videographers, and stepped in hands-on when needed. Used AI tools to scale ideation and scripting across the entire client portfolio.</div></div>
+      <div class="case-block"><div class="case-block-label">The Results</div>
+        <div class="results">
+          <div class="result-box"><div class="result-n">Viral</div><div class="result-l">Content Across Clients</div></div>
+          <div class="result-box"><div class="result-n">↑</div><div class="result-l">Audience Growth</div></div>
+          <div class="result-box"><div class="result-n">3yr</div><div class="result-l">Agency Partnership</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);padding:40px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:60px;height:60px;border-top:2px solid #E8572A;border-left:2px solid #E8572A;"></div>
+        <div style="position:absolute;bottom:0;right:0;width:60px;height:60px;border-bottom:2px solid #E8572A;border-right:2px solid #E8572A;"></div>
+        <div style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:180px;color:rgba(232,87,42,0.03);line-height:1;pointer-events:none;user-select:none;">SELF</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <div>
+            <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#E8572A;margin-bottom:8px;">Agency Results</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#F2EFE9;line-height:0.9;letter-spacing:1px;">SELF<br><span style="color:#E8572A;">The Agency</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#555;margin-bottom:6px;">2022 — 2025</div>
+            <div style="font-size:12px;color:#888;font-weight:300;line-height:1.5;">Head of Content<br>Strategy · Production · Leadership</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:24px;">
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#E8572A;line-height:1;letter-spacing:2px;">5–10</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Clients at Once</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Managed full client roster across production, editing, strategy &amp; calendars simultaneously</div>
+          </div>
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#E8572A;line-height:1;letter-spacing:2px;">3yr</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Agency Tenure</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Long-term Head of Content partnership — building systems &amp; owning creative output</div>
+          </div>
+          <div style="background:#1A1A1A;padding:24px 20px;border:1px solid rgba(255,255,255,0.04);position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#E8572A;opacity:0.6;"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#E8572A;line-height:1;letter-spacing:2px;">↑</div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:6px 0 12px;">Audience Growth</div>
+            <div style="font-size:11px;line-height:1.6;color:rgba(242,239,233,0.3);border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;">Drove viral content &amp; follower growth across all accounts through platform-native strategy</div>
+          </div>
+        </div>
+        <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#E8572A;margin-bottom:12px;">What I Owned &amp; Led</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-bottom:20px;">
+          <div style="background:#1A1A1A;padding:16px 12px;border:1px solid rgba(255,255,255,0.04);text-align:center;"><div style="font-size:18px;margin-bottom:8px;">🎬</div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);line-height:1.4;">Hands-On Production</div></div>
+          <div style="background:#1A1A1A;padding:16px 12px;border:1px solid rgba(255,255,255,0.04);text-align:center;"><div style="font-size:18px;margin-bottom:8px;">👥</div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);line-height:1.4;">Editor &amp; Production Oversight</div></div>
+          <div style="background:#1A1A1A;padding:16px 12px;border:1px solid rgba(255,255,255,0.04);text-align:center;"><div style="font-size:18px;margin-bottom:8px;">🧠</div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);line-height:1.4;">Content Strategy</div></div>
+          <div style="background:#1A1A1A;padding:16px 12px;border:1px solid rgba(255,255,255,0.04);text-align:center;"><div style="font-size:18px;margin-bottom:8px;">📅</div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);line-height:1.4;">Content Calendars</div></div>
+          <div style="background:#1A1A1A;padding:16px 12px;border:1px solid rgba(255,255,255,0.04);text-align:center;"><div style="font-size:18px;margin-bottom:8px;">🎓</div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);line-height:1.4;">Course Creation</div></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+          <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#E8572A;width:100%;margin-bottom:4px;">Client Industries</div>
+          <span style="padding:6px 14px;border:1px solid rgba(255,255,255,0.08);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);">Beauty</span>
+          <span style="padding:6px 14px;border:1px solid rgba(255,255,255,0.08);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);">Wellness</span>
+          <span style="padding:6px 14px;border:1px solid rgba(255,255,255,0.08);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);">Fashion</span>
+          <span style="padding:6px 14px;border:1px solid rgba(255,255,255,0.08);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);">Legal</span>
+          <span style="padding:6px 14px;border:1px solid rgba(255,255,255,0.08);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);">Personal Brand</span>
+          <span style="padding:6px 14px;border:1px solid rgba(255,255,255,0.08);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,239,233,0.4);">Lifestyle</span>
+        </div>
+        <div style="display:flex;gap:20px;padding:16px 20px;background:rgba(232,87,42,0.06);border:1px solid rgba(232,87,42,0.15);flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#E8572A;"></div><span style="font-size:11px;color:rgba(242,239,233,0.5);"><strong style="color:#F2EFE9;">Platforms:</strong> Instagram · YouTube · Paid Ads</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#E8572A;"></div><span style="font-size:11px;color:rgba(242,239,233,0.5);"><strong style="color:#F2EFE9;">Led:</strong> Editors · Videographers · Freelancers</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#E8572A;"></div><span style="font-size:11px;color:rgba(242,239,233,0.5);"><strong style="color:#F2EFE9;">AI:</strong> Integrated AI workflows for ideation &amp; scripting</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO WORK BANNER -->
+<div style="background:var(--charcoal);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:60px 6%;display:flex;justify-content:space-between;align-items:center;">
+  <div class="reveal">
+    <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--coral);margin-bottom:12px;">Full Video Portfolio</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,48px);color:var(--white);line-height:0.9;letter-spacing:1px;">See the Work<br><span style="color:var(--coral);">In Action</span></div>
+  </div>
+  <div class="reveal reveal-delay-2" style="text-align:right;">
+    <p style="font-size:14px;color:rgba(242,239,233,0.4);margin-bottom:24px;max-width:320px;line-height:1.7;">Princess Cruises, Mia Aesthetics, SELF The Agency and more. All videos, campaigns, and production work in one place.</p>
+    <a href="https://portfolioclinics.my.canva.site/dailygportfolio" target="_blank" style="display:inline-flex;align-items:center;gap:12px;padding:18px 36px;background:var(--coral);color:var(--white);text-decoration:none;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:600;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);transition:all 0.3s;">View Full Video Work →</a>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <p class="quote-text">"I've done every job on a content team. That's not a flex, it's why I know how to lead one."</p>
+  <p class="quote-author">— Daily Gorina</p>
+</div>
+
+<!-- AI -->
+<section class="section ai-section" id="ai">
+  <div class="s-label reveal">Competitive Advantage</div>
+  <div class="s-title reveal">AI-Integrated<br>Leadership</div>
+  <div class="s-divider"></div>
+  <div class="ai-intro">
+    <div class="ai-intro-text reveal">Most content leaders can strategize and produce. Very few can also build the systems, read the data, and leverage AI across the entire content operation. From ideation to performance optimization, I operate at all three levels simultaneously.</div>
+    <div class="ai-intro-pull reveal reveal-delay-2">"I don't just use AI. I design how it gets used across a content team. That's the difference between a tool user and a system builder."</div>
+  </div>
+  <div class="ai-cards">
+    <div class="ai-card reveal">
+      <div class="ai-card-num">01</div>
+      <div class="ai-card-title">AI Content Operations</div>
+      <p class="ai-card-text">Built and deployed a Claude API-powered content strategy system, enabling AI-assisted ideation, hook generation, scripting, and content planning across multiple client accounts. I designed the workflow architecture, not just the prompts.</p>
+      <span class="ai-tag">Claude API · ChatGPT · Prompt Engineering</span>
+    </div>
+    <div class="ai-card reveal reveal-delay-1">
+      <div class="ai-card-num">02</div>
+      <div class="ai-card-title">AI Video & Visual Production</div>
+      <p class="ai-card-text">Experienced in AI-powered video and image generation, using Higgsai with Kling for generative video, Midjourney for visual concepting, CapCut AI for rapid editing, and Remotion for programmatic motion graphics at scale.</p>
+      <span class="ai-tag">Kling · Midjourney · CapCut AI · Remotion</span>
+    </div>
+    <div class="ai-card reveal reveal-delay-2">
+      <div class="ai-card-num">03</div>
+      <div class="ai-card-title">Performance Analytics & Optimization</div>
+      <p class="ai-card-text">Build custom performance dashboards and KPI reports in Google Sheets and Excel, tracking engagement, reach, watch time, and posting frequency. Use data to test hooks, optimize formats, adjust publishing cadence, and decide what content to scale.</p>
+      <span class="ai-tag">Google Sheets · Excel · IBM Data Analytics</span>
+    </div>
+    <div class="ai-card reveal reveal-delay-3">
+      <div class="ai-card-num">04</div>
+      <div class="ai-card-title">Workflow Design & Team Efficiency</div>
+      <p class="ai-card-text">Built repeatable production workflows and AI-assisted systems that make creative teams operate faster, from content calendar automation to editor briefing systems. The goal is always the same: more output, higher quality, less friction.</p>
+      <span class="ai-tag">Systems Thinking · Workflow Architecture · Team Scale</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section process" id="process">
+  <div class="s-label reveal">How I Lead</div>
+  <div class="s-title reveal">Content Operating<br>Model</div>
+  <div class="s-divider"></div>
+  <p class="process-intro reveal">This is the system I bring to every content operation I lead. It's not just a workflow. It's a leadership framework that keeps teams aligned, output scalable, and results tied directly to business objectives. Whether managing one brand or twelve, this is how I run it.</p>
+  <div class="process-grid">
+    <div class="process-step reveal">
+      <div class="step-dot">1</div>
+      <div class="step-title">Strategy</div>
+      <p class="step-text">I audit audience data, platform trends, and business goals before setting a single content pillar. Strategy without data is just opinion. I don't guess, I build from evidence.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-dot">2</div>
+      <div class="step-title">Plan</div>
+      <p class="step-text">I build systems, not just calendars. I oversee and approve editorial frameworks, campaign briefs, and shot lists, creating structures that editors and videographers can execute consistently without bottlenecks. That's how content scales.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-dot">3</div>
+      <div class="step-title">Execute</div>
+      <p class="step-text">I lead creative teams through production, directing editors, videographers, and talent while staying close enough to the work to catch what needs to change before it becomes a problem.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-dot">4</div>
+      <div class="step-title">Measure</div>
+      <p class="step-text">I build custom dashboards that translate raw data (watch time, reach, engagement, retention) into clear creative decisions. Not just reporting numbers but telling leadership what they mean.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-4">
+      <div class="step-dot">5</div>
+      <div class="step-title">Optimize</div>
+      <p class="step-text">I run content like a testing machine. Last month's performance is the baseline, not the ceiling. I test hooks, formats, and cadence, then scale what's proven and cut what's not.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-title reveal">Let's<br>Build<br><span>Something.</span></div>
+  <div class="contact-right">
+    <p class="contact-desc reveal">Open to remote Head of Content, Creative Director, and Senior Content Strategist roles where I can build content systems that actually move the needle.</p>
+    <div class="contact-links reveal">
+      <a href="/cdn-cgi/l/email-protection#2b4f4a4247524c445942454a5b6b4c464a424705484446" class="contact-link featured"><span>Get In Touch</span><span class="arrow">→</span></a>
+      <a href="https://www.linkedin.com/in/daily-gorina-6a2668333/" class="contact-link" target="_blank"><span>LinkedIn</span><span class="arrow">→</span></a>
+      <a href="https://portfolioclinics.my.canva.site/dailygportfolio" class="contact-link" target="_blank"><span>Full Portfolio & Videos</span><span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-copy">© 2026 Daily Gorina</span>
+  <span class="footer-name">DAILY GORINA</span>
+  <span class="footer-copy">Miami, FL · Remote</span>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+(function anim(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim)})();
+document.querySelectorAll('a,button,.stat,.client-card,.ai-card,.process-step,.result-box').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2.5)';ring.style.width='60px';ring.style.height='60px';ring.style.opacity='.3'});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.width='32px';ring.style.height='32px';ring.style.opacity='1'})
+});
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+const secs=document.querySelectorAll('[id]'),links=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-200)cur=s.id});links.forEach(a=>{const active=a.getAttribute('href')==='#'+cur;a.style.opacity=active?'1':'.4';a.style.color=active?'var(--coral)':''})});
+</script>
+</body>
+</html>
