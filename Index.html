@@ -476,9 +476,9 @@
   }
 
   .contact-line {
-    display: flex;
+    display: grid;
+    grid-template-columns: 180px 1fr 24px;
     align-items: center;
-    justify-content: space-between;
     padding: 20px 0;
     border-bottom: 1px solid var(--border);
     text-decoration: none;
@@ -504,6 +504,7 @@
     font-size: 18px;
     color: var(--ink-light);
     transition: transform 0.2s, color 0.2s;
+    text-align: right;
   }
   .contact-line:hover .contact-line-arrow {
     transform: translate(4px, -4px);
@@ -802,9 +803,9 @@
   <div class="contact-inner reveal">
     <div class="contact-title">Let's<br>build<br><em>something.</em></div>
     <div class="contact-right">
-      <a href="mailto:dailygorinap@gmail.com" class="contact-line">
+      <a href="/cdn-cgi/l/email-protection#b4d0d5ddd8cdd3dbc6dddad5c4f4d3d9d5ddd89ad7dbd9" class="contact-line">
         <span class="contact-line-label">Email</span>
-        <span class="contact-line-value">dailygorinap@gmail.com</span>
+        <span class="contact-line-value"><span class="__cf_email__" data-cfemail="117570787d68767e63787f706151767c70787d3f727e7c">[email&#160;protected]</span></span>
         <span class="contact-line-arrow">↗</span>
       </a>
       <a href="https://www.linkedin.com/in/daily-g-6a2668333/" target="_blank" class="contact-line">
@@ -832,7 +833,7 @@
   <span class="footer-copy">© 2026 · Miami, FL · Open to Remote</span>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // Nav scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
@@ -843,13 +844,4 @@
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-</script>
-</body>
-</html>
+ 
